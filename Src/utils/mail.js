@@ -41,17 +41,49 @@ try{
 }
 }
 
-const emailVerficationMailgenContent=(username,verificationurl)=>{
+const emailVerificationMailgenContent=(username,verificationUrl)=>{
     return{
         body:{
             name:username,
-            intro:"Welcome to our App! we are excited to have you",
+            intro:"Welcome to our App! we are excited to have you on board.",
             action:{
-                intro:"welcome to our App! we are excited to have you",
-                action:{
-                    instruction:"To verify your email please click",
-                }
-            }
+                instructions:
+                "To verify your email please click on the following button",
+                button:{
+                    color:"#22BC66",
+                    text:"verify your email",
+                    link:verificationUrl,
+                },
+            },
+            outro:
+            "Need help,or have questions? just reply to this email,we'd love to help"
+        }
+    };
+};
+
+
+const forgotPasswordMailgenContent=(username,passwordResetUrl)=>{
+    return{
+        body:{
+            name:username,
+            intro:"we got a request to rest the password of your account",
+            action:{
+                instructions:
+                "TO reset your password click on the following button or link",
+                button:{
+                    color:"#22BC66",
+                    text:"Reset password",
+                    link:passwordResetUrl,
+                },
+            },
+            outro:
+            "Need help,or have questions?just reply to this email,we'd love to help"
         }
     }
+};
+
+export{
+    emailVerificationMailgenContent,
+    forgotPasswordMailgenContent,
+    sendEmail
 }
