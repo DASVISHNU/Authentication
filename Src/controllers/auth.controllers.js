@@ -123,4 +123,45 @@ const login=asyncHandler(async (req,res)=>{
             "user logged in successfully",
         ),
     )
+});
+const logoutUser=asyncHandler(async (req,res)=>{
+    await User.findByIdAndUpdate(
+        req.user._id,
+        {
+            $set:{
+                refreshToken:"",
+            },
+        },
+        {
+            new:true,
+        },
+    );
+
+    const options={
+        httpOnly:true,
+        secure:true,
+    };
+    return res.status(200)
+    .clearcookie("accessToken",options)
+    .clearcookie("refreshToken",options)
+    .json(new ApiResponse(200,{},"User logged out"));
+})
+
+const getCurrentUser=asyncHandler(async(req,res)=>{
+    return res.status(200)
+    .json(new ApiResponse(200,req.user,"Current user fetched sucessfully"));
+
+})
+
+const verifyEmail=asyncHandler(async(req,res)=>{
+    const {verificationToken}=req.params;
+
+    if(!verificationToken){
+        throw new ApiError(400,"Emial verification token is missing");
+    }
+
+    let hashedToken=crypto
+    .createHash("sha256")
+    .update(verificationToken)
+    .digest("hex");
 })
