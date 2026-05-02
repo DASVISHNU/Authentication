@@ -33,7 +33,7 @@ const userSchema=new Schema(
         },
         fullname:{
             type:String,
-            required:true,
+            required:false,
             trim:true,
 
         },
@@ -69,10 +69,10 @@ const userSchema=new Schema(
 )
 
 
-userSchema.pre("save",async function (next) {
+userSchema.pre("save",async function () {
     if(!this.isModified("password")) return
 
-    this.password=await bcrypt.hash(this.password,10)
+    this.password=await bcrypt.hash(this.password,10);
     
 })
 
@@ -82,7 +82,7 @@ userSchema.methods.isPasswordCorrect=async function (password) {
 }
 
 userSchema.methods.generateRefreshToken=function(){
-    jwt.sign(
+    return jwt.sign(
         {
             _id:this._id,
             email:this.email,
@@ -95,7 +95,20 @@ userSchema.methods.generateRefreshToken=function(){
 
     )
 };
-
+userSchema.methods.generateAccessToken=function()
+{
+   return jwt.sign(
+        {
+            _id:this._id,
+            email:this.email,
+            username:this.username
+        },
+        process.env.ACCESS_TOKEN_SECRET,
+        {
+            expiresIn:process.env.ACCESS_TOKEN_EXPIRY
+        }
+    )
+}
 userSchema.methods.generateTemporaryToken=function(){
     const unHashedToken=crypto.randomBytes(20).toString("hex")
 
