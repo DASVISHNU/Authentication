@@ -22,7 +22,9 @@ app.use(
 
 //import { healthCheckroute } from "./controllers/healthcheck.controllers";
 import authRouter from "./routes/auth.route.js";
-
+import projectRouter from "./routes/project.routes.js";
 
 app.use("/api/v1/auth",authRouter);
+
+app.use("/api/v1/projects", projectRouter);
 export {app};
